@@ -4,32 +4,34 @@
     ViewData["Title"] = "Create Discussion";
 }
 
-<h1>Create Discussion</h1>
+<h1 class="text-primary fw-bold">Start a New Discussion</h1>
+<hr class="mb-4" />
 
-<form asp-controller="Discussion" asp-action="Create" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-controller="Discussion" asp-action="Create" method="post" enctype="multipart/form-data" class="p-4 border rounded shadow bg-light">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label fw-bold">Discussion Title</label>
+        <input asp-for="Title" class="form-control shadow-sm" required />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Content" class="control-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+    <div class="mb-3">
+        <label asp-for="Content" class="form-label fw-bold">Discussion Content</label>
+        <textarea asp-for="Content" class="form-control shadow-sm" rows="4" required></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label for="imageFile" class="control-label">Upload Image</label>
-        <input type="file" name="imageFile" class="form-control" />
+    <div class="mb-3">
+        <label for="imageFile" class="form-label fw-bold">Upload Image</label>
+        <input type="file" name="imageFile" class="form-control shadow-sm" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <div class="d-flex gap-3">
+        <button type="submit" class="btn btn-success btn-lg">Create Discussion</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg">Back to Discussions</a>
+    </div>
 </form>
-
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to List</a>
 
 
 @section Scripts {

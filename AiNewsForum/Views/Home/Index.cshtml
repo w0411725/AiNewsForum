@@ -4,36 +4,38 @@
     ViewData["Title"] = "Home";
 }
 
-<h1>Latest Discussions</h1>
-
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="text-primary">Latest Discussions</h1>
+    <a asp-controller="Discussion" asp-action="Create" class="btn btn-success btn-lg">+ Start a New Discussion</a>
+</div>
 @if (Model.Any())
 {
-    <table class="table">
-        <thead>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
             <tr>
                 <th>Title</th>
                 <th>Comments</th>
                 <th>Created</th>
                 <th>Image</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <!-- Clickable Title -->
                     <td>
-                        <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@item.DiscussionId">
+                        <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@item.DiscussionId"
+                           class="fw-bold text-decoration-none text-dark">
                             @item.Title
                         </a>
                     </td>
-                    <td>@item.Comments.Count()</td> <!-- Shows number of comments -->
-                    <td>@item.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>
+                    <td class="text-center">@item.Comments.Count()</td>
+                    <td class="text-center">@item.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="text-center">
                         @if (!string.IsNullOrEmpty(item.ImageFilename))
                         {
-                            <img src="~/images/@item.ImageFilename" alt="Discussion Image" style="max-width: 80px; max-height: 80px;" />
+                            <img src="~/images/@item.ImageFilename" alt="Discussion Image"
+                                 class="rounded img-thumbnail" style="max-width: 80px; height: auto;">
                         }
                     </td>
                 </tr>
@@ -43,7 +45,5 @@
 }
 else
 {
-    <p>No discussions available.</p>
+    <p class="text-muted">No discussions available. Be the first to start one!</p>
 }
-
-<a asp-controller="Discussion" asp-action="Create" class="btn btn-success">Create New Discussion</a>

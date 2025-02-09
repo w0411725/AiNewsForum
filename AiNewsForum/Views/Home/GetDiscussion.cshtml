@@ -8,41 +8,45 @@
     ViewData["Title"] = "Discussion Details";
 }
 
-<h1>@Model.Title</h1>
-<hr />
+<h1 class="text-primary fw-bold">@Model.Title</h1>
+<p class="text-muted"><strong>Created:</strong> @Model.CreateDate.ToString("yyyy-MM-dd HH:mm")</p>
+
 
 <div>
-    <p><strong>Created:</strong> @Model.CreateDate.ToString("yyyy-MM-dd HH:mm")</p>
 
     @if (!string.IsNullOrEmpty(Model.ImageFilename))
     {
-        <img src="~/images/@Model.ImageFilename" alt="Discussion Image" class="img-fluid" style="max-width: 500px;">
+        <div class="text-center my-4">
+            <img src="~/images/@Model.ImageFilename" alt="Discussion Image"
+                 class="img-fluid rounded img-thumbnail shadow" style="max-width: 500px;">
+        </div>
     }
 
     <p>@Model.Content</p>
 </div>
 
-<!-- Add Comment Button (Above Comments) -->
-<a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId" class="btn btn-success mt-3">Add Comment</a>
-
-<h3 class="mt-4">Comments</h3>
+<h3 class="mt-4">💬 Comments</h3>
 
 @if (Model.Comments.Any())
 {
     <ul class="list-group mt-3">
         @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
         {
-            <li class="list-group-item">
-                <p>@comment.Content</p>
-                <small class="text-muted">Posted on: @comment.CreateDate.ToString("yyyy-MM-dd HH:mm")</small>
+            <li class="list-group-item d-flex flex-column">
+                <p class="fw-bold"> @comment.Content</p>
+                <small class="text-muted"> @comment.CreateDate.ToString("yyyy-MM-dd HH:mm")</small>
             </li>
         }
     </ul>
 }
 else
 {
-    <p>No comments yet.</p>
+    <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
 }
 
-<!-- Back to Home Button -->
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Back to Home</a>
+<div class="d-flex gap-3 mt-4">
+    <a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId"
+       class="btn btn-success btn-lg">Add Comment</a>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg">Back to Home</a>
+</div>
