@@ -1,0 +1,35 @@
+@model AiNewsForum.Models.Comment
+
+@{
+    ViewData["Title"] = "Add a Comment";
+}
+
+<h1>Add a Comment</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="DiscussionId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Discussion" asp-action="Details" asp-route-id="@Model.DiscussionId" class="btn btn-secondary">Back to Discussion</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

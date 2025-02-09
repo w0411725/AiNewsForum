@@ -1,0 +1,54 @@
+@model AiNewsForum.Models.Discussion
+
+@{
+    ViewData["Title"] = "Discussion Details";
+}
+
+<h1>Discussion Details</h1>
+
+<div>
+    <h4>Discussion</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Content)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Content)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ImageFilename)</dt>
+        <dd class="col-sm-10">
+            <img src="~/images/@Model.ImageFilename" alt="@Model.Title" style="max-width: 200px;" />
+        </dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.CreateDate)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.CreateDate)</dd>
+    </dl>
+</div>
+
+<!-- Comments Section -->
+<h3>Comments</h3>
+
+@if (Model.Comments != null && Model.Comments.Any())
+{
+    <ul class="list-group">
+        @foreach (var comment in Model.Comments)
+        {
+            <li class="list-group-item">
+                <p>@comment.Content</p>
+                <small class="text-muted">Posted on: @comment.CreateDate</small>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet.</p>
+}
+
+<!-- Add Comment Button -->
+<a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId" class="btn btn-success mt-3">Add Comment</a>
+
+<br />
+<br />
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
