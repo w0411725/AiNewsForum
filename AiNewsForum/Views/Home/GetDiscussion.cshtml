@@ -22,16 +22,19 @@
     <p>@Model.Content</p>
 </div>
 
-<h3>Comments</h3>
+<!-- Add Comment Button (Above Comments) -->
+<a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId" class="btn btn-success mt-3">Add Comment</a>
+
+<h3 class="mt-4">Comments</h3>
 
 @if (Model.Comments.Any())
 {
-    <ul class="list-group">
-        @foreach (var comment in Model.Comments)
+    <ul class="list-group mt-3">
+        @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
         {
             <li class="list-group-item">
                 <p>@comment.Content</p>
-                <small class="text-muted">Posted on: @comment.CreateDate</small>
+                <small class="text-muted">Posted on: @comment.CreateDate.ToString("yyyy-MM-dd HH:mm")</small>
             </li>
         }
     </ul>
@@ -41,9 +44,5 @@ else
     <p>No comments yet.</p>
 }
 
-<!-- Add a comment button -->
-<a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId" class="btn btn-primary mt-3">Add Comment</a>
-
 <!-- Back to Home Button -->
 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Back to Home</a>
-

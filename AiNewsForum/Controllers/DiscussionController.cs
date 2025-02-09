@@ -84,7 +84,7 @@ namespace AiNewsForum.Controllers
 
                 _context.Add(discussion);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(discussion);
         }

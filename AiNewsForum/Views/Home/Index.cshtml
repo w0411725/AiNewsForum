@@ -1,8 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<AiNewsForum.Models.Discussion>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Latest Discussions</h1>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Comments</th>
+                <th>Created</th>
+                <th>Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <!-- Clickable Title -->
+                    <td>
+                        <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@item.DiscussionId">
+                            @item.Title
+                        </a>
+                    </td>
+                    <td>@item.Comments.Count()</td> <!-- Shows number of comments -->
+                    <td>@item.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageFilename))
+                        {
+                            <img src="~/images/@item.ImageFilename" alt="Discussion Image" style="max-width: 80px; max-height: 80px;" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No discussions available.</p>
+}
+
+<a asp-controller="Discussion" asp-action="Create" class="btn btn-success">Create New Discussion</a>

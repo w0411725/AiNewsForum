@@ -30,16 +30,18 @@ namespace AiNewsForum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CommentId,Content,CreateDate,DiscussionId")] Comment comment)
+        public async Task<IActionResult> Create([Bind("Content,DiscussionId")] Comment comment)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(comment);
             }
-            ViewData["DiscussionId"] = new SelectList(_context.Discussions, "DiscussionId", "DiscussionId", comment.DiscussionId);
-            return View(comment);
+
+            comment.CreateDate = DateTime.Now;
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("GetDiscussion", "Home", new { id = comment.DiscussionId });
         }
     }
 }
