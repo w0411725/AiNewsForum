@@ -1,0 +1,59 @@
+﻿@model AiForum.Models.Discussion
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="mb-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Discussions
+    </a>
+</div>
+
+<div class="card mb-4 shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">@Model.Title</h3>
+        <span>@Model.CreateDate.ToString("yyyy-MM-dd HH:mm")</span>
+    </div>
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(Model.ImageFilename))
+        {
+            <div class="text-center mb-3">
+                <img src="~/images/@Model.ImageFilename" class="img-fluid rounded" alt="Discussion Image"
+                     style="max-height: 400px;">
+            </div>
+        }
+        <div class="discussion-content mb-4">
+            @Model.Content
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">Comments (@Model.Comments.Count)</h4>
+
+@if (Model.Comments.Any())
+{
+    <div class="comment-list">
+        @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <p class="card-text">@comment.Content</p>
+                        <small class="text-muted">@comment.CreateDate.ToString("yyyy-MM-dd HH:mm")</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-light">
+        <p class="mb-0">No comments yet. Be the first to share your thoughts!</p>
+    </div>
+}
+
+<div class="mt-4">
+    <a asp-controller="Comment" asp-action="Create" asp-route-discussionId="@Model.DiscussionId"
+       class="btn btn-success">Add Comment</a>
+</div>

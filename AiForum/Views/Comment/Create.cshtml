@@ -1,0 +1,31 @@
+@model AiForum.Models.Comment
+@{
+    ViewData["Title"] = "Add Comment";
+}
+
+<h3 class="mb-3">Add a Comment</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post" class="p-4 border rounded shadow-sm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Use a hidden field for DiscussionId instead of a dropdown -->
+            <input type="hidden" asp-for="DiscussionId" />
+
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label">Comment</label>
+                <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <!-- Remove the CreateDate input since you're setting it in the controller -->
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Submit Comment</button>
+                <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@Model.DiscussionId" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

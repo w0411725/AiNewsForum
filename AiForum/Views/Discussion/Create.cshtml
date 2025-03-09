@@ -1,0 +1,32 @@
+@model AiForum.Models.Discussion
+@{
+    ViewData["Title"] = "Create Discussion";
+}
+<h1 class="text-primary fw-bold">Start a New Discussion</h1>
+<hr class="mb-4" />
+<form asp-controller="Discussion" asp-action="Create" method="post" enctype="multipart/form-data" class="p-4 border rounded shadow bg-light">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label fw-bold">Discussion Title</label>
+        <input asp-for="Title" class="form-control shadow-sm" required />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Content" class="form-label fw-bold">Discussion Content</label>
+        <textarea asp-for="Content" class="form-control shadow-sm" rows="4" required></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="ImageFile" class="form-label fw-bold">Upload Image</label>
+        <input type="file" name="ImageFile" class="form-control shadow-sm" />
+    </div>
+    <div class="d-flex gap-3">
+        <button type="submit" class="btn btn-success btn-lg">Create Discussion</button>
+        <a asp-controller="Discussion" asp-action="Index" class="btn btn-secondary btn-lg">Back to Discussions</a>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
