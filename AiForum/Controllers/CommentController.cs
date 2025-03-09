@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using AiForum.Data;
 using AiForum.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AiForum.Controllers
 {
+    [Authorize]
     public class CommentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -50,22 +53,25 @@ namespace AiForum.Controllers
             _logger.LogInformation("POST Create action called with Content: {Content}, DiscussionId: {DiscussionId}",
                 comment.Content, comment.DiscussionId);
 
-            // Check for model validation errors
+            // Get the logged-in user's ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _logger.LogInformation($"Retrieved User ID: {userId ?? "NULL"}");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Unauthorized comment submission attempt");
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Model validation failed");
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    _logger.LogWarning("Validation error: {ErrorMessage}", error.ErrorMessage);
-                }
-
                 ViewData["DiscussionId"] = comment.DiscussionId;
                 return View(comment);
             }
 
             try
             {
-                // Verify the discussion exists before adding the comment
                 var discussionExists = await _context.Discussions.AnyAsync(d => d.DiscussionId == comment.DiscussionId);
                 if (!discussionExists)
                 {
@@ -74,27 +80,15 @@ namespace AiForum.Controllers
                     return View(comment);
                 }
 
-                // Generate current date
+                // Assign user ID and creation date
+                comment.UserId = userId;
                 comment.CreateDate = DateTime.UtcNow;
-                _logger.LogInformation("Adding comment with CreateDate: {CreateDate}", comment.CreateDate);
 
-                // Add to context and save
                 _context.Add(comment);
                 var result = await _context.SaveChangesAsync();
-                _logger.LogInformation("SaveChangesAsync result: {Result} row(s) affected", result);
+                _logger.LogInformation("Comment successfully saved with ID: {CommentId}", comment.CommentId);
 
-                if (result > 0)
-                {
-                    _logger.LogInformation("Comment successfully saved with ID: {CommentId}", comment.CommentId);
-                    return RedirectToAction("GetDiscussion", "Home", new { id = comment.DiscussionId });
-                }
-                else
-                {
-                    _logger.LogWarning("SaveChangesAsync returned 0 rows affected");
-                    ModelState.AddModelError("", "Failed to save the comment.");
-                    ViewData["DiscussionId"] = comment.DiscussionId;
-                    return View(comment);
-                }
+                return RedirectToAction("GetDiscussion", "Home", new { id = comment.DiscussionId });
             }
             catch (Exception ex)
             {

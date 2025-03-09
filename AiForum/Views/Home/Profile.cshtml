@@ -1,0 +1,57 @@
+﻿@model AiForum.Models.ProfileViewModel
+@{
+    ViewData["Title"] = Model.User.Name + "'s Profile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.User.ImageFilename))
+            {
+                <img src="~/images/@Model.User.ImageFilename" class="img-fluid rounded-circle mb-3" alt="Profile Picture" style="max-width: 150px;">
+            }
+            else
+            {
+                <img src="~/images/default-profile.png" class="img-fluid rounded-circle mb-3" alt="Default Profile" style="max-width: 150px;">
+            }
+
+            <h2>@Model.User.Name</h2>
+            <p><strong>Location:</strong> @(Model.User.Location ?? "Not specified")</p>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Discussions by @Model.User.Name</h3>
+
+            @if (Model.Discussions.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Created</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var discussion in Model.Discussions)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-action="GetDiscussion" asp-controller="Home" asp-route-id="@discussion.DiscussionId">
+                                        @discussion.Title
+                                    </a>
+                                </td>
+                                <td>@discussion.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@discussion.Comments.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No discussions yet.</p>
+            }
+        </div>
+    </div>
+</div>

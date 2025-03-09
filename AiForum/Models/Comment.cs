@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace AiForum.Models
 {
@@ -13,11 +14,16 @@ namespace AiForum.Models
 
         public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
-        // Foreign Key
+        // Foreign Keys
         public int DiscussionId { get; set; }
+        [ForeignKey(nameof(User))]
+        public string? UserId { get; set; }
 
-        // Navigation Property
+        // Navigation Properties
         [ForeignKey("DiscussionId")]
-        public Discussion? Discussion { get; set; }
+        public virtual Discussion? Discussion { get; set; }
+
+        public virtual ApplicationUser? User { get; set; }
     }
 }
+

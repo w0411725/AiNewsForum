@@ -1,51 +1,55 @@
 @model AiForum.Models.Discussion
-
 @{
-    Layout = null;
+    ViewData["Title"] = "Discussion Details";
 }
+<div class="container">
+    <h1 class="text-primary fw-bold">Discussion Details</h1>
+    <hr class="mb-4" />
+    <div class="p-4 border rounded shadow bg-light">
+        <h4 class="fw-bold">Discussion</h4>
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Title</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Title)</dd>
 
-<!DOCTYPE html>
+            <dt class="col-sm-3 fw-bold">Content</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Content)</dd>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+            <dt class="col-sm-3 fw-bold">Image</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.ImageFilename))
+                {
+                    <img src="~/images/@Model.ImageFilename" class="img-fluid rounded" alt="Discussion Image" width="200" />
+                }
+                else
+                {
+                    <span>No image uploaded</span>
+                }
+            </dd>
 
-<div>
-    <h4>Discussion</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFilename)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFilename)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DiscussionId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-</body>
-</html>
+            <dt class="col-sm-3 fw-bold">Created At</dt>
+            <dd class="col-sm-9">@Model.CreateDate.ToString("f")</dd>
+
+            <dt class="col-sm-3 fw-bold">Author</dt>
+            <dd class="col-sm-9">@(Model.User?.UserName ?? "Anonymous")</dd>
+        </dl>
+    </div>
+
+    <h4 class="fw-bold mt-4">Comments</h4>
+    @if (Model.Comments.Any())
+    {
+        <div class="list-group shadow-sm">
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="list-group-item">
+                    <strong>@(comment.User?.UserName ?? "Anonymous")</strong> - <small class="text-muted">@comment.CreateDate.ToString("f")</small>
+                    <p class="mt-2">@comment.Content</p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No comments yet.</p>
+    }
+
+

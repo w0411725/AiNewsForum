@@ -9,47 +9,45 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>Comments</title>
 </head>
 <body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discussion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discussion.Content)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Created At</th>
+                <th>Author</th>
+                <th>Discussion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Content)</td>
+                    <td>@item.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@(item.User?.UserName ?? "Anonymous")</td> <!-- Show comment author -->
+                    <td>
+                        <a asp-controller="Discussion" asp-action="Details" asp-route-id="@item.DiscussionId">
+                            @Html.DisplayFor(modelItem => item.Discussion.Title)
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 </body>
 </html>
